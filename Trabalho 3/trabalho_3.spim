@@ -12,47 +12,47 @@ main:
     li $t9, 32768       #carrega o valor 32768 no registrador $s1
     ble $t9, $t0, handleErro #se a entrada do usuário for maior ou igual 32768, a mensagem de erro será printada
     blez $t0, handleErro #se a entrada do usuário for menor ou igual a 0, a mensagem de erro será printada
-    li $t1, 2 # dividir por 2
-    li $t5, 3 # i do for
+    li $t1, 2 # carrega o 2 no registrador t1
+    li $t5, 3 # carrega o 2 no registrador t1 (i do for)
     jal while
     
 while:
     div $t0, $t1 #divide a entrada do usuário por 2
     mfhi $t2 #pega o resto da divisão
-    bnez $t2, lacoFor 
-    mflo $t0
+    bnez $t2, lacoFor #se t2 for diferente de zero, entrar no lacoFor
+    mflo $t0 #salva o quociente da divisão em mflo
     move $a0, $t1  #move valor de t1 para a0 para ser printado
     li $v0, 1      #chamada pra printar um inteiro
     syscall        #chama o S0
     la $a0, quebraLinha    #mensagem a ser printada armazenada no registrador a0 (quebra de linha)
     li $v0, 4      #chamada pra printar uma string
     syscall        #chama o S0
-    j while
+    j while #chama recursivo o while
     
 lacoFor:
     mtc1 $t0, $f0 #salvando em ponto flutuante o valor de entrada do usuário
-    cvt.s.w $f0, $f0
-    sqrt.s $f2, $f0 #salva raíz de n e salva em t4
+    cvt.s.w $f0, $f0 #converte o valor flutuante em para precisão simples
+    sqrt.s $f2, $f0 #pega raíz de n (agora em f0) e salva em f2
 
     mtc1 $t5, $f1 #salvando em ponto flutuante o valor de i
-    cvt.s.w $f1, $f1 #convertendo para pf    
+    cvt.s.w $f1, $f1 #convertendo para ponto flutuante    
 
-    c.le.s  $f1, $f2
-    bc1f vaiProIf    
+    c.le.s  $f1, $f2 #compara se f1 é maior que f2
+    bc1f vaiProIf  #se a condição da linha anterior for verdadeira, vaiProIf  
     
-    div $t0, $t5 #divide a entrada do usuário por i
+    div $t0, $t5 #divide a entrada do usuário por i (t5)
     mfhi $t2 #pega o resto da divisão
-    beqz $t2, whileDoFor
+    beqz $t2, whileDoFor #se o resto da divisão for igual a zero, vá para whileDoFor
     
     add $t5, $t5, $t1 #i = i + 2
-    jal lacoFor
+    jal lacoFor #chama recursivo o proprio lacoFor
     
 whileDoFor:
     div $t0, $t5 #divide a entrada do usuário por i
-    mfhi $t2
-    bnez $t2, lacoFor
+    mfhi $t2 #pega o resto da divisão
+    bnez $t2, lacoFor #vá para lacoFor se t2 (resto da divisão) for diferente de zero
     
-    move $a0, $t5  #move valor de t1 para a0 para ser printado
+    move $a0, $t5  #move valor de t5 para a0 para ser printado
     li $v0, 1      #chamada pra printar um inteiro
     syscall        #chama o S0
     la $a0, quebraLinha    #mensagem a ser printada armazenada no registrador a0 (quebra de linha)
@@ -61,10 +61,10 @@ whileDoFor:
     
     mflo $t0 #pega o quociente    
     
-    j whileDoFor
+    j whileDoFor #chama recursivo o proprio whileDoFor
 
 vaiProIf:
-    bgt $t0, 2, printaResultado
+    bgt $t0, 2, printaResultado #se t0 for maior que 2, vá para printaResultado
 
 exit:     
     li $v0, 10 #encerra o programa
