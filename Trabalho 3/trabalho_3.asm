@@ -31,7 +31,7 @@ while:
     j while
     
 lacoFor:
-	#sqrt.s $t4, $t0 #salva raíz de n e salva em t4
+    	bgt $t0, $t1, vaiProIf
 	mtc1 $t0, $f0 #salvando em ponto flutuante o valor de entrada do usuário
 	cvt.s.w $f0, $f0
 	sqrt.s $f2, $f0 #salva raíz de n e salva em t4
