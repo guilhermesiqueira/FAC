@@ -35,20 +35,26 @@ lacoFor:
 	mtc1 $t0, $f0 #salvando em ponto flutuante o valor de entrada do usuário
 	cvt.s.w $f0, $f0
 	sqrt.s $f2, $f0 #salva raíz de n e salva em t4
+
+	mtc1 $t5, $f1 #salvando em ponto flutuante o valor de i
+	cvt.s.w $f1, $f1 #convertendo para pf
 	
-	mfc1 $t7, $f2
-	
-	ble $t5, $t7,vaiProIf #se a raíz for menor ou igual a i (contador), sai do loop
-	
+	#li $t2, 0
+        div $t0, $t5 #divide a entrada do usuário por i
+        mfhi $t2 #pega o resto da divisão
+        beqz $t2, whileDoFor
+ 
+	#mfc1 $t7, $f2
+	#ble $t5, $t7,vaiProIf #se a raíz for menor ou igual a i (contador), sai do loop
+	c.le.s  $f1, $f0
+	bc1t vaiProIf
+
 	add $t5, $t5, $t1 #i = i + 2
 	jal exit
 
 
 whileDoFor:
-    li $t2, 0
-    div $t0, $t5 #divide a entrada do usuário por i
-    mfhi $t2 #pega o resto da divisão
-    bnez $t2, lacoFor 
+    bnez $t2, lacoFor
     mflo $t0 #pega o quociente
     move $a0, $t5  #move valor de t1 para a0 para ser printado
     li $v0, 1      #chamada pra printar um inteiro

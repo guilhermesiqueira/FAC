@@ -1,5 +1,3 @@
-
-// Program to print all prime factors 
 # include <stdio.h> 
 # include <math.h> 
   
@@ -12,14 +10,23 @@ void primeFactors(int n)
         printf("%d ", 2); 
         n = n/2; 
     } 
-  
+    float a = 0.0;
+    int b = 0;
     // n must be odd at this point.  So we can skip  
     // one element (Note i = i +2) 
     for (int i = 3; i <= sqrt(n); i = i+2) 
     { 
+        printf("n = %d\n",n);
+        a = sqrt(n);
+        printf("entrou aqui\n");
+        printf("i = %d\n", i);
+        printf("sqrt = %f\n", a);
+        b = n%i;
+        printf( "resto de n por i = %d \n", b );
         // While i divides n, print i and divide n 
         while (n%i == 0) 
         { 
+            printf("\nentra no while\n");
             printf("%d ", i); 
             n = n/i; 
         } 
