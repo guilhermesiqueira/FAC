@@ -17,7 +17,6 @@ main:
     jal while
     
 while:
-    li $t2, 0
     div $t0, $t1 #divide a entrada do usuário por 2
     mfhi $t2 #pega o resto da divisão
     bnez $t2, lacoFor 
@@ -31,37 +30,37 @@ while:
     j while
     
 lacoFor:
-    	bgt $t0, $t1, vaiProIf
-	mtc1 $t0, $f0 #salvando em ponto flutuante o valor de entrada do usuário
-	cvt.s.w $f0, $f0
-	sqrt.s $f2, $f0 #salva raíz de n e salva em t4
+    mtc1 $t0, $f0 #salvando em ponto flutuante o valor de entrada do usuário
+    cvt.s.w $f0, $f0
+    sqrt.s $f2, $f0 #salva raíz de n e salva em t4
 
-	mtc1 $t5, $f1 #salvando em ponto flutuante o valor de i
-	cvt.s.w $f1, $f1 #convertendo para pf
-	
-	#li $t2, 0
-        div $t0, $t5 #divide a entrada do usuário por i
-        mfhi $t2 #pega o resto da divisão
-        beqz $t2, whileDoFor
- 
-	#mfc1 $t7, $f2
-	#ble $t5, $t7,vaiProIf #se a raíz for menor ou igual a i (contador), sai do loop
-	c.le.s  $f1, $f0
-	bc1t vaiProIf
+    mtc1 $t5, $f1 #salvando em ponto flutuante o valor de i
+    cvt.s.w $f1, $f1 #convertendo para pf    
 
-	add $t5, $t5, $t1 #i = i + 2
-	jal exit
-
-
+    c.le.s  $f1, $f2
+    bc1f vaiProIf    
+    
+    div $t0, $t5 #divide a entrada do usuário por i
+    mfhi $t2 #pega o resto da divisão
+    beqz $t2, whileDoFor
+    
+    add $t5, $t5, $t1 #i = i + 2
+    jal lacoFor
+    
 whileDoFor:
+    div $t0, $t5 #divide a entrada do usuário por i
+    mfhi $t2
     bnez $t2, lacoFor
-    mflo $t0 #pega o quociente
+    
     move $a0, $t5  #move valor de t1 para a0 para ser printado
     li $v0, 1      #chamada pra printar um inteiro
     syscall        #chama o S0
     la $a0, quebraLinha    #mensagem a ser printada armazenada no registrador a0 (quebra de linha)
     li $v0, 4      #chamada pra printar uma string
     syscall        #chama o S0
+    
+    mflo $t0 #pega o quociente    
+    
     j whileDoFor
 
 vaiProIf:
