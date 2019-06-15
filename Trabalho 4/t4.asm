@@ -23,6 +23,7 @@ main:
 # $t8 = c // pode virar $v0
 
 for:
+  lbu $t3, 0($a0)
   srl $v1,$t8,8 #(c >> 8)
   xor $t4,$t3,$v1 #s = d xor (c >> 8)
 
@@ -42,11 +43,11 @@ for:
   or  $t6, $t5, $v1 #t = p | (s << 1)
 
   sll $v0, $t8, 8 #(c << 8)
-  sll $v1, $t6, 15 #(t << 15)
-  sll $a0, $t6, 1 #(t << 1)
-  xor $a1, $v0, $v1 #(c << 8)^(t << 15)
+  sll $a3, $t6, 15 #(t << 15)
+  sll $a2, $t6, 1 #(t << 1)
+  xor $a1, $v0, $a3 #(c << 8)^(t << 15)
   xor $a1, $a1, $t6 #(c << 8)^(t << 15)^t
-  xor $t7, $a1, $a0 #r = (c << 8)^(t << 15)^t^(t << 1)
+  xor $t7, $a1, $a2 #r = (c << 8)^(t << 15)^t^(t << 1)
   add $t8, $t7, 0
   
   add $t1, $t1, $t2 #i = i + 1
