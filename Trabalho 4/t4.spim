@@ -24,7 +24,6 @@ main:
 
 for:
   lbu $t3, 0($a0)
-  and $t3, $t3, 0xFF
   srl $v1,$t8,8 #(c >> 8)
   xor $t4,$t3,$v1 #s = d xor (c >> 8)
 
