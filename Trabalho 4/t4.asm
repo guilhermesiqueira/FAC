@@ -1,17 +1,16 @@
 
 main:
-  la $a0,str1 #carrega string str1
-  li $v0,4 #chamada para printar
-  syscall #chama o SO
+#  la $a0,str1 #carrega string str1
+#  li $v0,4 #chamada para printar
+#  syscall #chama o SO
 
   li $v0,8 #pega a entrada do usuário
   la $a0, buffer #carrega o espaço dos bytes no registrador a0
   li $a1, 16 #aloca o espaço de bytes para a string
   move $t0,$a0 #move a entrada do usuário para o registrador t0
   syscall #chama o SO
-
   li $t1, 0 # carrega o 0 no registrador t1 (contador do for)
-  li $t2, 1 # carrega o 1 no registrador t2 (pra incrementar)
+  addi	$t2, $0, '\n'
   jal for
   jal printaResultado #chama função de printar resultado
   
@@ -23,7 +22,8 @@ main:
 # $t8 = c // pode virar $v0
 
 for:
-  lbu $t3, 0($a0)
+  lb $t3, ($a0)
+  beq $t3, $t2, printaResultado  
   and $t3, $t3, 0xFF
   srl $v1,$t8,8 #(c >> 8)
   xor $t4,$t3,$v1 #s = d xor (c >> 8)
@@ -52,7 +52,8 @@ for:
   xor $t7, $a1, $a2 #r = (c << 8)^(t << 15)^t^(t << 1)
   add $t8, $t7, 0
   and $t8, $t8, 0xFFFF  
-  add $t1, $t1, $t2 #i = i + 1
+  addi $t1, $t1, 1 #i = i + 1
+  addi $a0, $a0, 1 # go to next byte      
 
   j for
 
@@ -61,9 +62,9 @@ printaResultado:
   li $v0,4 #chamada para printar string
   syscall #chama o SO
 
-  la $a0, buffer #recarrega o esoaço de bytes para o endereço primário
-  move $a0,$t0 #primary address = t0 
-  li $v0,4 #printa a string
+  #la $a0, buffer #recarrega o esoaço de bytes para o endereço primário
+  move $a0,$t8 #primary address = t0 
+  li $v0,34 #printa a string
   syscall #chama o SO
   jal exit #chama função de sair
 
@@ -74,5 +75,6 @@ exit:
 
 .data
   buffer: .space 16
-  str1:  .asciiz "Digite uma string: "
-  str2:  .asciiz "Você escreveu:\n"
+  str1:  .asciiz "Digite uma string:"
+  str2:  .asciiz "CRC16­BUYPASS: "
+
